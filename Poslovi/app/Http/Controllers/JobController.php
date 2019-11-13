@@ -103,6 +103,9 @@ class JobController extends Controller
             $job = Job::find($id);
             $job->active = !$job->active;
             $job->save();
+            $updateJobModeration = JobModeration::where('email', $job->email)->firstOrFail();
+            $updateJobModeration->posted_before = true;
+            $updateJobModeration->save();
             return redirect()->action('JobController@index')->with('message', 'Updated.');
         }catch(\Exception $e){
             return redirect()->action('JobController@index')->with('message', 'An error accured.');
